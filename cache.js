@@ -71,7 +71,7 @@ Cache.prototype.getCustom = function(key, customGetter, ttl, callback){
 		//No cached response - use getter to set new cache item
 		else{
 			var eventNames = emitter.eventNames();
-			if(eventNames.indexOf('requestCompleted'+key) === -1){
+			if(eventNames.indexOf('requestCompleted'+key) === -1){ // Prevents registering duplicate listeners before request completes
 				emitter.once('requestCompleted'+key,function(cb){ return function(data){
 					delete _cache.requestQueued[key];
 					return cb(data);
