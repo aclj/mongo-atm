@@ -70,10 +70,13 @@ Cache.prototype.getCustom = function(key, customGetter, ttl, callback){
 		}
 		//No cached response - use getter to set new cache item
 		else{
-			emitter.once('requestCompleted'+key,function(cb){ return function(data){
+			var eventNames = emitter.eventNames();
+			if(eventNames.indexOf('requestCompleted'+key) === -1){
+				emitter.once('requestCompleted'+key,function(cb){ return function(data){
 					delete _cache.requestQueued[key];
 					return cb(data);
-			}}(callback))
+				}}(callback))
+			}
 
 			//Start getter if it hasn't been started
 			if(typeof _cache.requestQueued[key] === 'undefined'){
